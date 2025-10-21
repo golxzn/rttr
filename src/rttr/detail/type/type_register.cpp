@@ -47,6 +47,7 @@
 #include "rttr/detail/registration/registration_manager.h"
 
 #include <set>
+#include <iterator>
 
 using namespace std;
 
