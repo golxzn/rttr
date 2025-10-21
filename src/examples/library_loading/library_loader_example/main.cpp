@@ -31,15 +31,16 @@
 #include <array>
 #include <map>
 #include <iostream>
+#include <string_view>
 
 #include <rttr/type>
 
 using namespace rttr;
 
 #ifdef NDEBUG
-    static string_view library_name("plugin_example");
+static constexpr std::string_view library_name{ "plugin_example" };
 #else
-    static string_view library_name("plugin_example_d");
+static constexpr std::string_view library_name{ "plugin_example_d" };
 #endif
 
 int main(int argc, char** argv)

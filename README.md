@@ -1,3 +1,7 @@
+> [!WARNING]
+> This is the fork of RTTR library, which was abandoned cuz C++26 is coming.
+> For those who is in 17ths, welcome. Otherwise, learn new C++ reflection!
+
 [![Version](https://badge.fury.io/gh/rttrorg%2Frttr.svg)](https://github.com/rttrorg/rttr/releases/latest)
 [![Travis status](https://travis-ci.org/rttrorg/rttr.svg?branch=master)](https://travis-ci.org/rttrorg/rttr)
 [![Appveyor status](https://ci.appveyor.com/api/projects/status/github/rttrorg/rttr?svg=true&branch=master)](https://ci.appveyor.com/project/acki-m/rttr)
@@ -13,7 +17,7 @@
 
 RTTR
 ====
-> C++ Reflection Library
+> C++17 Reflection Library
 
 RTTR stands for Run Time Type Reflection.
 It describes the ability of a computer program to introspect and modify an object at runtime. It is also the name of the library itself, which is written in C++ and released as open source library.

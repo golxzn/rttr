@@ -31,7 +31,9 @@
 #include "rttr/detail/base/core_prerequisites.h"
 #include "rttr/property.h"
 #include "rttr/type.h"
+
 #include <memory>
+#include <functional>
 
 namespace rttr
 {

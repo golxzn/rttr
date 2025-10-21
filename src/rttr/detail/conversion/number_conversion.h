@@ -132,12 +132,14 @@ template<typename F, typename T>
 typename std::enable_if<std::is_floating_point<F>::value &&
                         std::is_integral<T>::value && std::numeric_limits<T>::is_signed,
                         bool>::type
-convert_to(const F& from, T& to)
-{
-    if (from > std::numeric_limits<T>::max())
+convert_to(const F& from, T& to) {
+	constexpr auto t_max{ static_cast<F>(std::numeric_limits<T>::max()) };
+	constexpr auto t_min{ -static_cast<F>(std::numeric_limits<T>::max()) };
+    if (from > t_max) {
         return false; // value too large
-    else if (from < -std::numeric_limits<T>::max())
+    } else if (from < t_min) {
         return false; // value to small
+    }
 
     to = static_cast<T>(from);
     return true;
@@ -151,8 +153,11 @@ typename std::enable_if<std::is_floating_point<F>::value &&
                         bool>::type
 convert_to(const F& from, T& to)
 {
-    if (from < 0 || from > std::numeric_limits<T>::max())
+	constexpr auto t_max{ static_cast<F>(std::numeric_limits<T>::max()) };
+	constexpr auto t_min{ static_cast<F>(0) };
+    if (from < t_min || from > t_max) {
         return false; // value too large
+	}
 
     to = static_cast<T>(from);
     return true;

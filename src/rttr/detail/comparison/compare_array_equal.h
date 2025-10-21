@@ -30,9 +30,9 @@
 
 #include "rttr/detail/base/core_prerequisites.h"
 #include "rttr/detail/misc/misc_type_traits.h"
-#include "rttr/string_view.h"
 
 #include <type_traits>
+#include <string_view>
 #include <cstring>
 
 namespace rttr

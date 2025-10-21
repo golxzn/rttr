@@ -29,6 +29,7 @@
 #include <string>
 #include <vector>
 #include <array>
+#include <string_view>
 
 #include <iostream>
 
@@ -145,8 +146,8 @@ static void write_array(const variant_sequential_view& view, PrettyWriter<String
 
 static void write_associative_container(const variant_associative_view& view, PrettyWriter<StringBuffer>& writer)
 {
-    static const string_view key_name("key");
-    static const string_view value_name("value");
+    constexpr std::string_view key_name{ "key" };
+    constexpr std::string_view value_name{ "value" };
 
     writer.StartArray();
 

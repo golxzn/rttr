@@ -145,7 +145,7 @@ bool type_register::unregister_enumeration(enumeration_wrapper_base* enum_data)
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
-void type_register::custom_name(type& t, string_view custom_name)
+void type_register::custom_name(type& t, std::string_view custom_name)
 {
      type_register_private::get_instance().register_custom_name(t, custom_name);
 }
@@ -301,14 +301,14 @@ void type_register_private::unregister_reg_manager(registration_manager* manager
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
-flat_multimap<string_view, ::rttr::method>& type_register_private::get_global_method_storage()
+flat_multimap<std::string_view, ::rttr::method>& type_register_private::get_global_method_storage()
 {
     return m_global_method_stroage;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
-flat_multimap<string_view, ::rttr::property>& type_register_private::get_global_property_storage()
+flat_multimap<std::string_view, ::rttr::property>& type_register_private::get_global_property_storage()
 {
     return m_global_property_stroage;
 }
@@ -394,9 +394,9 @@ static void move_pointer_and_ref_to_type(std::string& type_name)
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
-static std::string normalize_orig_name(string_view name)
+static std::string normalize_orig_name(std::string_view name)
 {
-    std::string normalized_name = name.to_string();
+    std::string normalized_name{ name };
 
     move_pointer_and_ref_to_type(normalized_name);
     return normalized_name;
@@ -670,7 +670,7 @@ std::string type_register_private::derive_template_instance_name(type_data* info
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
-void type_register_private::update_custom_name(std::string new_name, const type& t)
+void type_register_private::update_custom_name(std::string_view new_name, const type& t)
 {
     std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -680,7 +680,7 @@ void type_register_private::update_custom_name(std::string new_name, const type&
     {
         m_custom_name_to_id.erase(type_name);
 
-        type_name = std::move(new_name);
+        type_name = std::string{ new_name };
         m_custom_name_to_id.insert(std::make_pair(type_name, t));
     }
 }
@@ -695,7 +695,7 @@ std::string type_register_private::derive_name(const type& t)
         auto custom_name    = t.get_raw_array_type().get_name();
         auto raw_name_orig  = normalize_orig_name( t.get_raw_array_type().get_full_name());
 
-        return derive_name_impl(src_name_orig, raw_name_orig, custom_name.to_string());
+        return derive_name_impl(src_name_orig, raw_name_orig, std::string{ custom_name });
     }
     else if (t != t.get_raw_type())
     {
@@ -703,7 +703,7 @@ std::string type_register_private::derive_name(const type& t)
         auto custom_name    = t.get_raw_type().get_name();
         auto raw_name_orig  = normalize_orig_name( t.get_raw_type().get_full_name());
 
-        return derive_name_impl(src_name_orig, raw_name_orig, custom_name.to_string());
+        return derive_name_impl(src_name_orig, raw_name_orig, std::string{ custom_name });
     }
     else
     {
@@ -713,12 +713,12 @@ std::string type_register_private::derive_name(const type& t)
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
-void type_register_private::register_custom_name(type& t, string_view custom_name)
+void type_register_private::register_custom_name(type& t, std::string_view custom_name)
 {
     if (!t.is_valid())
         return;
 
-    update_custom_name(custom_name.to_string(), t);
+    update_custom_name(custom_name, t);
 
     // we have to make a copy of the list, because we also perform an insertion with 'update_custom_name'
     auto tmp_type_list = m_custom_name_to_id.value_data();
@@ -863,7 +863,7 @@ bool type_register_private::unregister_global_method(const method_wrapper_base* 
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
-property type_register_private::get_type_property(const type& t, string_view name)
+property type_register_private::get_type_property(const type& t, std::string_view name)
 {
     for (const auto& prop : get_items_for_type(t, t.m_type_data->m_class_data.m_properties))
     {
@@ -876,7 +876,7 @@ property type_register_private::get_type_property(const type& t, string_view nam
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
-method type_register_private::get_type_method(const type& t, string_view name,
+method type_register_private::get_type_method(const type& t, std::string_view name,
                                               const std::vector<type>& type_list)
 {
     for (const auto& meth : get_items_for_type(t, t.m_type_data->m_class_data.m_methods))
@@ -1108,14 +1108,14 @@ std::vector<type>& type_register_private::get_type_storage()
 
 /////////////////////////////////////////////////////////////////////////////////////
 
-flat_map<string_view, type>& type_register_private::get_orig_name_to_id()
+flat_map<std::string_view, type>& type_register_private::get_orig_name_to_id()
 {
     return m_orig_name_to_id;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
 
-flat_map<std::string, type, hash>& type_register_private::get_custom_name_to_id()
+flat_map<std::string, type>& type_register_private::get_custom_name_to_id()
 {
     return m_custom_name_to_id;
 }

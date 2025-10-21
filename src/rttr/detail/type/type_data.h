@@ -134,7 +134,7 @@ struct RTTR_LOCAL type_data
     type_data* array_raw_type;
 
     std::string name;
-    string_view type_name;
+    std::string_view type_name;
 
     std::size_t get_sizeof;
     std::size_t get_pointer_dimension;
@@ -289,55 +289,48 @@ using type_trait_value = uint64_t;
 /////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////
 
-namespace rttr
-{
-namespace detail
-{
+namespace rttr::detail {
 
 template<typename T>
-RTTR_LOCAL std::unique_ptr<type_data> make_type_data()
-{
-    auto obj = std::unique_ptr<type_data>
-               (
-                        new type_data
-                        {
-                            raw_type_info<T>::get_type().m_type_data, wrapper_type_info<T>::get_type().m_type_data,
-                            array_raw_type<T>::get_type().m_type_data,
+RTTR_LOCAL std::unique_ptr<type_data> make_type_data() {
+    return std::unique_ptr<type_data>{ new type_data{
+        raw_type_info<T>::get_type().m_type_data,
+        wrapper_type_info<T>::get_type().m_type_data,
+        array_raw_type<T>::get_type().m_type_data,
 
-                            ::rttr::detail::get_type_name<T>().to_string(), ::rttr::detail::get_type_name<T>(),
+        std::string{ ::rttr::detail::get_type_name<T>() },
+        ::rttr::detail::get_type_name<T>(),
 
-                            get_size_of<T>::value(),
-                            pointer_count<T>::value,
+        get_size_of<T>::value(),
+        pointer_count<T>::value,
 
-                            &create_variant_func<T>::create_variant,
-                            &base_classes<T>::get_types,
-                            nullptr,
-                            &get_metadata_func_impl<T>,
-                            get_create_wrapper_func<T>(),
+        &create_variant_func<T>::create_variant,
+        &base_classes<T>::get_types,
+        nullptr,
+        &get_metadata_func_impl<T>,
+        get_create_wrapper_func<T>(),
 
-                            nullptr,
-                            true,
-                            type_trait_value{ TYPE_TRAIT_TO_BITSET_VALUE(is_class) |
-                                              TYPE_TRAIT_TO_BITSET_VALUE(is_enum) |
-                                              TYPE_TRAIT_TO_BITSET_VALUE(is_array) |
-                                              TYPE_TRAIT_TO_BITSET_VALUE(is_pointer) |
-                                              TYPE_TRAIT_TO_BITSET_VALUE(is_arithmetic) |
-                                              TYPE_TRAIT_TO_BITSET_VALUE_2(is_function_ptr, is_function_pointer) |
-                                              TYPE_TRAIT_TO_BITSET_VALUE(is_member_object_pointer) |
-                                              TYPE_TRAIT_TO_BITSET_VALUE(is_member_function_pointer) |
-                                              TYPE_TRAIT_TO_BITSET_VALUE_2(::rttr::detail::is_associative_container, is_associative_container) |
-                                              TYPE_TRAIT_TO_BITSET_VALUE_2(::rttr::detail::is_sequential_container, is_sequential_container) |
-                                              TYPE_TRAIT_TO_BITSET_VALUE_2(::rttr::detail::template_type_trait, is_template_instantiation)
-                                            },
-                            class_data(get_most_derived_info_func<T>(), template_type_trait<T>::get_template_arguments())
-                        }
-               );
-    return obj;
+        nullptr,
+        true,
+        type_trait_value{
+            TYPE_TRAIT_TO_BITSET_VALUE(is_class) |
+            TYPE_TRAIT_TO_BITSET_VALUE(is_enum) |
+            TYPE_TRAIT_TO_BITSET_VALUE(is_array) |
+            TYPE_TRAIT_TO_BITSET_VALUE(is_pointer) |
+            TYPE_TRAIT_TO_BITSET_VALUE(is_arithmetic) |
+            TYPE_TRAIT_TO_BITSET_VALUE_2(is_function_ptr, is_function_pointer) |
+            TYPE_TRAIT_TO_BITSET_VALUE(is_member_object_pointer) |
+            TYPE_TRAIT_TO_BITSET_VALUE(is_member_function_pointer) |
+            TYPE_TRAIT_TO_BITSET_VALUE_2(::rttr::detail::is_associative_container, is_associative_container) |
+            TYPE_TRAIT_TO_BITSET_VALUE_2(::rttr::detail::is_sequential_container, is_sequential_container) |
+            TYPE_TRAIT_TO_BITSET_VALUE_2(::rttr::detail::template_type_trait, is_template_instantiation)
+        },
+        class_data(get_most_derived_info_func<T>(), template_type_trait<T>::get_template_arguments())
+    } };
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
-} // end namespace detail
-} // end namespace rttr
+} // end namespace rttr::detail
 
 #endif // RTTR_TYPE_DATA_H_
