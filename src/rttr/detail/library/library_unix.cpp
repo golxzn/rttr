@@ -146,7 +146,10 @@ bool library_private::load_native()
 
     if (!m_handle)
     {
-        m_error_string = "Cannot load library " + m_file_name + " " + get_error();
+		m_error_string = "Cannot load library ";
+		m_error_string += m_file_name;
+		m_error_string += ' ';
+		m_error_string += get_error();
     }
     else
     {
@@ -163,7 +166,10 @@ bool library_private::unload_native()
 {
     if (dlclose(m_handle))
     {
-         m_error_string = "Cannot unload library: '" + m_file_name + "'" +  get_error();
+         m_error_string = "Cannot unload library: '";
+		 m_error_string += m_file_name;
+		 m_error_string += '\'';
+		 m_error_string += get_error();
          return false;
     }
 
